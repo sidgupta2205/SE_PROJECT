@@ -27,7 +27,9 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 
 	boolean laneShowing;
 	boolean psShowing;
-
+	
+	// HRK Comment: Create a separate class which will be inherited by all the classes who wants to create a view. 
+	// Code Smell: Code duplication.
 	public LaneStatusView(Lane lane, int laneNum ) {
 
 		this.lane = lane;
