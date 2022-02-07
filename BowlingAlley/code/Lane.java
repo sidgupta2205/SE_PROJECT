@@ -429,6 +429,9 @@ public class Lane extends Thread implements PinsetterObserver {
 	 * 
 	 * @return			The bowlers total score
 	 */
+	 
+	 // HRK code: very messy code for calculating score. We can use refer this to calculate scores. https://github.com/klucar/bowling
+	 // Type of code smell: Long method.
 	private int getScore( Bowler Cur, int frame) {
 		int[] curScore;
 		int strikeballs = 0;
@@ -447,7 +450,7 @@ public class Lane extends Thread implements PinsetterObserver {
 				//Add the next ball to the ith one in cumul.
 				cumulScores[bowlIndex][(i/2)] += curScore[i+1] + curScore[i]; 
 				if (i > 1) {
-					//cumulScores[bowlIndex][i/2] += cumulScores[bowlIndex][i/2 -1];
+					//cumulScores[bowlIndex][i/2] += cumulScores[bowlIndex][i/2 -1];   //HRK Comment: Dead Code.
 				}
 			} else if( i < current && i%2 == 0 && curScore[i] == 10  && i < 18){
 				strikeballs = 0;
@@ -457,8 +460,8 @@ public class Lane extends Thread implements PinsetterObserver {
 					strikeballs = 1;
 					if(curScore[i+3] != -1) {
 						//Still got em.
-						strikeballs = 2;
-					} else if(curScore[i+4] != -1) {
+						strikeballs = 2;		//HRK Comment: If and else if doing same thing. Can be combined.
+					} else if(curScore[i+4] != -1) {		
 						//Ok, got it.
 						strikeballs = 2;
 					}
