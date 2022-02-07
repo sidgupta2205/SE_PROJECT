@@ -38,7 +38,9 @@ import java.text.*;
  * Constructor for GUI used to Add Parties to the waiting party queue.
  *  
  */
-
+	 
+	 // HRK code: very messy code for calculating score. We can use this link to calculate scores. https://github.com/klucar/bowling
+	 // Type of code smell: Long method.
 public class AddPartyView implements ActionListener, ListSelectionListener {
 
 	private int maxSize;
