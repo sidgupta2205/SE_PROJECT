@@ -39,7 +39,8 @@ public class NewPatronView implements ActionListener {
 
 	private String selectedNick, selectedMember;
 	private AddPartyView addParty;
-
+	// HRK Comment: Create a separate class which will be inherited by all the classes who wants to create a view. 
+	// Code Smell: Code duplication.
 	public NewPatronView(AddPartyView v) {
 
 		addParty=v;	
