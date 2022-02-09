@@ -30,6 +30,12 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 	
 	// HRK Comment: Create a separate class which will be inherited by all the classes who wants to create a view. 
 	// Code Smell: Code duplication.
+	public void addButton(JButton mybutton,JPanel myPanel) {
+		myPanel.setLayout(new FlowLayout());
+		mybutton.addActionListener(this);
+		myPanel.add(mybutton);
+		
+	}
 	public LaneStatusView(Lane lane, int laneNum ) {
 
 		this.lane = lane;
@@ -63,22 +69,16 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 
 		viewLane = new JButton("View Lane");
 		JPanel viewLanePanel = new JPanel();
-		viewLanePanel.setLayout(new FlowLayout());
-		viewLane.addActionListener(this);
-		viewLanePanel.add(viewLane);
+		addButton(viewLane,viewLanePanel);
 
 		viewPinSetter = new JButton("Pinsetter");
 		JPanel viewPinSetterPanel = new JPanel();
-		viewPinSetterPanel.setLayout(new FlowLayout());
-		viewPinSetter.addActionListener(this);
-		viewPinSetterPanel.add(viewPinSetter);
+		addButton(viewPinSetter, viewPinSetterPanel);
 
 		maintenance = new JButton("     ");
 		maintenance.setBackground( Color.GREEN );
 		JPanel maintenancePanel = new JPanel();
-		maintenancePanel.setLayout(new FlowLayout());
-		maintenance.addActionListener(this);
-		maintenancePanel.add(maintenance);
+		addButton(maintenance, maintenancePanel);
 
 		viewLane.setEnabled( false );
 		viewPinSetter.setEnabled( false );
@@ -90,8 +90,6 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 
 		jp.add( cLabel );
 		jp.add( curBowler );
-//		jp.add( fLabel );
-//		jp.add( foul );
 		jp.add( pdLabel );
 		jp.add( pinsDown );
 		
