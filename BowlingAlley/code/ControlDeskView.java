@@ -38,6 +38,12 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 	 */
 // HRK Comment: Code Smell: The constructor is large in size. addParty button and finished Button are doing one and the same thing.
 // We can create a different function addButton(object refernce of colPanel) {return object of button.} 
+	public void addButton(JButton mybutton,JPanel myPanel) {
+		myPanel.setLayout(new FlowLayout());
+		mybutton.addActionListener(this);
+		myPanel.add(mybutton);
+		
+	}
 	public ControlDeskView(ControlDesk controlDesk, int maxMembers) {
 
 		this.controlDesk = controlDesk;
@@ -48,39 +54,28 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		win.getContentPane().setLayout(new BorderLayout());
 		((JPanel) win.getContentPane()).setOpaque(false);
 
+		GeneralView gview=new GeneralView();
+		
 		JPanel colPanel = new JPanel();
 		colPanel.setLayout(new BorderLayout());
 
 		// Controls Panel
 		JPanel controlsPanel = new JPanel();
-		controlsPanel.setLayout(new GridLayout(3, 1));
-		controlsPanel.setBorder(new TitledBorder("Controls"));
+		gview.setGridLayout(controlsPanel, 3, 1, "Controls");
 
 		addParty = new JButton("Add Party");
-		JPanel addPartyPanel = new JPanel();	
-		addPartyPanel.setLayout(new FlowLayout());		// HRK Comment: Must be done in a separate function. So that it is easy to extend.
-		addParty.addActionListener(this);
-		addPartyPanel.add(addParty);
+		JPanel addPartyPanel = new JPanel();	// HRK Comment: Must be done in a separate function. So that it is easy to extend.
+		addButton(addParty,addPartyPanel);
 		controlsPanel.add(addPartyPanel);
 
-		assign = new JButton("Assign Lanes");
-		JPanel assignPanel = new JPanel();
-		assignPanel.setLayout(new FlowLayout());
-		assign.addActionListener(this);
-		assignPanel.add(assign);
-//		controlsPanel.add(assignPanel);               // HRK Comment: Dead code. assign created but not added to controlsPanel.
-
 		finished = new JButton("Finished");
-		JPanel finishedPanel = new JPanel();
-		finishedPanel.setLayout(new FlowLayout());    // HRK Comment: Same code as addaParty button .
-		finished.addActionListener(this);
-		finishedPanel.add(finished);
+		JPanel finishedPanel = new JPanel();         // HRK Comment: Same code as addaParty button .
+		addButton(finished,finishedPanel);
 		controlsPanel.add(finishedPanel);
 
 		// Lane Status Panel
 		JPanel laneStatusPanel = new JPanel();
-		laneStatusPanel.setLayout(new GridLayout(numLanes, 1));            // HRK Comment: Must be done in a separate function. So that it is easy to extend.
-		laneStatusPanel.setBorder(new TitledBorder("Lane Status"));
+		gview.setGridLayout(laneStatusPanel, numLanes, 1,"Lane Status");
 
 		HashSet lanes=controlDesk.getLanes();
 		Iterator it = lanes.iterator();
@@ -97,15 +92,13 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 
 		// Party Queue Panel
 		JPanel partyPanel = new JPanel();
-		partyPanel.setLayout(new FlowLayout());
-		partyPanel.setBorder(new TitledBorder("Party Queue"));
+		gview.setFlowLayout(partyPanel,"Party Queue");
 
 		Vector empty = new Vector();
 		empty.add("(Empty)");
 
 		partyList = new JList(empty);
-		partyList.setFixedCellWidth(120);
-		partyList.setVisibleRowCount(10);
+		gview.addJList(partyList,10 ,120);
 		JScrollPane partyPane = new JScrollPane(partyList);
 		partyPane.setVerticalScrollBarPolicy(
 			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
