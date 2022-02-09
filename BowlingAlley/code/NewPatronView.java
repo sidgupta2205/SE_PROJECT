@@ -41,6 +41,19 @@ public class NewPatronView implements ActionListener {
 	private AddPartyView addParty;
 	// HRK Comment: Create a separate class which will be inherited by all the classes who wants to create a view. 
 	// Code Smell: Code duplication.
+	public void addButton(JButton mybutton,JPanel myPanel) {
+		myPanel.setLayout(new FlowLayout());
+		mybutton.addActionListener(this);
+		myPanel.add(mybutton);
+		
+	}	
+	public void addLabel(JPanel myPanel, JLabel mylabel, JTextField tfield,String labelcontent, int length) {
+		myPanel.setLayout(new FlowLayout());
+		mylabel=new JLabel(labelcontent);
+		tfield=new JTextField("",length);
+		myPanel.add(mylabel);
+		myPanel.add(tfield);
+	}
 	public NewPatronView(AddPartyView v) {
 
 		addParty=v;	
@@ -59,25 +72,13 @@ public class NewPatronView implements ActionListener {
 		patronPanel.setBorder(new TitledBorder("Your Info"));
 
 		JPanel nickPanel = new JPanel();
-		nickPanel.setLayout(new FlowLayout());
-		nickLabel = new JLabel("Nick Name");
-		nickField = new JTextField("", 15);
-		nickPanel.add(nickLabel);
-		nickPanel.add(nickField);
+		addLabel(nickPanel,nickLabel,nickField,"Nick Name",15);
 
 		JPanel fullPanel = new JPanel();
-		fullPanel.setLayout(new FlowLayout());
-		fullLabel = new JLabel("Full Name");
-		fullField = new JTextField("", 15);
-		fullPanel.add(fullLabel);
-		fullPanel.add(fullField);
+		addLabel(fullPanel,fullLabel,fullField,"Full Name",15);
 
 		JPanel emailPanel = new JPanel();
-		emailPanel.setLayout(new FlowLayout());
-		emailLabel = new JLabel("E-Mail");
-		emailField = new JTextField("", 15);
-		emailPanel.add(emailLabel);
-		emailPanel.add(emailField);
+		addLabel(emailPanel,emailLabel,emailField,"EMail",15);
 
 		patronPanel.add(nickPanel);
 		patronPanel.add(fullPanel);
@@ -91,15 +92,12 @@ public class NewPatronView implements ActionListener {
 
 		finished = new JButton("Add Patron");
 		JPanel finishedPanel = new JPanel();
-		finishedPanel.setLayout(new FlowLayout());
-		finished.addActionListener(this);
-		finishedPanel.add(finished);
+		addButton(finished, finishedPanel);
+
 
 		abort = new JButton("Abort");
 		JPanel abortPanel = new JPanel();
-		abortPanel.setLayout(new FlowLayout());
-		abort.addActionListener(this);
-		abortPanel.add(abort);
+		addButton(abort, abortPanel);
 
 		buttonPanel.add(abortPanel);
 		buttonPanel.add(finishedPanel);
@@ -153,5 +151,4 @@ public class NewPatronView implements ActionListener {
 	public String getEmail() {
 		return email;
 	}
-
 }
