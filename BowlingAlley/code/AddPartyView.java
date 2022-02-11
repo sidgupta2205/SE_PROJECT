@@ -109,8 +109,6 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(4, 1));
 
-		Insets buttonMargin = new Insets(4, 4, 4, 4);
-
 		addPatron = new JButton("Add to Party");
 		JPanel addPatronPanel = new JPanel();
 		addButton(addPatron, addPatronPanel);
@@ -161,16 +159,16 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 				}
 			}
 		}
-		if (e.getSource().equals(remPatron)) {
+		else if (e.getSource().equals(remPatron)) {
 			if (selectedMember != null) {
 				party.removeElement(selectedMember);
 				partyList.setListData(party);
 			}
 		}
-		if (e.getSource().equals(newPatron)) {
+		else if (e.getSource().equals(newPatron)) {
 			NewPatronView newPatron = new NewPatronView( this );
 		}
-		if (e.getSource().equals(finished)) {
+		else if (e.getSource().equals(finished)) {
 			if ( party != null && party.size() > 0) {
 				controlDesk.updateAddParty( this );
 			}
