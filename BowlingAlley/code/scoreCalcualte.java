@@ -48,7 +48,6 @@ class scoreCalculate implements Serializable {
      public void markScore(Lane lane,int ball,int score){
         int[] curScore;
         int index =  ( lane.frameNumber * 2 + ball);
-        System.out.print(index);
         curScore = (int[]) scores.get(lane.currentThrower);
         curScore[ index] = score;
         scores.put(lane.currentThrower, curScore);

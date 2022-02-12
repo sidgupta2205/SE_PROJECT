@@ -98,12 +98,27 @@ public class Pinsetter {
 	 * @pre none
 	 * @post all subscribers have recieved pinsetter event with updated state
 	 * */
-	private void sendEvent(int jdpins) {	// send events when our state is changd
+	public void sendEvent(int jdpins) {
+		// send events when our state is changd
+//		throwNumber++;
+		System.out.println("send vene tetet eee");
+		
 		for (int i=0; i < subscribers.size(); i++) {
 			((PinsetterObserver)subscribers.get(i)).receivePinsetterEvent(
 				new PinsetterEvent(pins, foul, throwNumber, jdpins));
 		}
 	}
+	
+	public void sendEvent(boolean[] pins_recv,int jdpins,boolean foul) {
+		// send events when our state is changd
+		throwNumber++;
+		for (int i=0; i < subscribers.size(); i++) {
+			((PinsetterObserver)subscribers.get(i)).receivePinsetterEvent(
+				new PinsetterEvent(pins_recv, foul, throwNumber, jdpins));
+		}
+	}
+	
+	
 
 	/** Pinsetter()
 	 * 
@@ -128,33 +143,7 @@ public class Pinsetter {
 	 * @pre none
 	 * @post pins may have been knocked down and the thrownumber has been incremented
 	 */
-	public void ballThrown() {	// simulated event of ball hits sensor
-		int count = 0;
-		foul = false;
-		double skill = rnd.nextDouble();
-		for (int i=0; i <= 9; i++) {
-			if (pins[i]) {
-				double pinluck = rnd.nextDouble();
-				if (pinluck <= .04){ 
-					foul = true;
-				}
-				if ( ((skill + pinluck)/2.0 * 1.2) > .5 ){
-					pins[i] = false;
-				} 
-				if (!pins[i]) {		// this pin just knocked down
-					count++;
-				}
-			}
-		}
 
-		try {
-			Thread.sleep(500);				// pinsetter is where delay will be in a real game
-		} catch (Exception e) {}
-
-		sendEvent(count);
-
-		throwNumber++;
-	}
 
 	/** reset()
 	 * 
@@ -165,14 +154,15 @@ public class Pinsetter {
 	 */
 	public void reset() {
 		foul = false;
-		throwNumber = 1;
+		throwNumber = 0;
 		resetPins();
 		
 		try {
 			Thread.sleep(1000);
 		} catch (Exception e) {}
 		
-		sendEvent(-1);
+		
+		//sendEvent(-1);
 	}
 
 	/** resetPins()

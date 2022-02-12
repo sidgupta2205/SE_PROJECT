@@ -145,7 +145,7 @@ public class Lane extends Thread implements PinsetterObserver {
 
 	private boolean gameIsHalted;
 	private scoreCalculate ScCalculate;
-	
+	private SimulateThrow smt;
 	
 	private boolean partyAssigned;
 	private boolean gameFinished;
@@ -178,7 +178,7 @@ public class Lane extends Thread implements PinsetterObserver {
 		ScCalculate = new scoreCalculate();
 		gameIsHalted = false;
 		partyAssigned = false;
-
+		smt = new SimulateThrow();
 		gameNumber = 0;
 
 		setter.subscribe( this );
@@ -210,7 +210,11 @@ public class Lane extends Thread implements PinsetterObserver {
 					tenthFrameStrike = false;
 					ball = 0;
 					while (canThrowAgain) {
-						setter.ballThrown();		// simulate the thrower's ball hiting
+						int count = smt.ballThrown();
+						setter.sendEvent(smt.pins,count, smt.foul);
+						smt.resetPins();
+						
+						// simulate the thrower's ball hiting
 						ball++;
 					}
 					
@@ -296,8 +300,9 @@ public class Lane extends Thread implements PinsetterObserver {
 	 */
 	public void receivePinsetterEvent(PinsetterEvent pe) {
 			
-			int score = pe.totalPinsDown();
-		
+			System.out.print("throw no "+pe.getThrowNumber());
+			int score = pe.pinsDownOnThisThrow();
+			System.out.print("score is "+score+"\n");
 			if (pe.pinsDownOnThisThrow() >=  0) {			// this is a real throw
 				ScCalculate.markScore(this, ball, score);
 	
@@ -351,7 +356,7 @@ public class Lane extends Thread implements PinsetterObserver {
 	 * resets the scoring mechanism, must be called before scoring starts
 	 * 
 	 * @pre the party has been assigned
-	 * @post scoring system is initialized
+	 * @post scoring system is initializedassin
 	 */
 	private void resetScores() {
 		Iterator bowlIt = (party.getMembers()).iterator();
