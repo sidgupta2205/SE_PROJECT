@@ -28,8 +28,8 @@ public class EndGamePrompt implements ActionListener {
 
 		result =0;
 		
-		win = new JFrame("Another Game for " + partyName + "?" );
-		win.getContentPane().setLayout(new BorderLayout());
+		win = new JFrame("Another Game for " + partyName + "?" );		// HRL COmment.Same code is duplicated in many classes. We can create a separate class.
+		win.getContentPane().setLayout(new BorderLayout());			// Having methods. add panel, addButton etc.
 		((JPanel) win.getContentPane()).setOpaque(false);
 
 		JPanel colPanel = new JPanel();
@@ -50,15 +50,15 @@ public class EndGamePrompt implements ActionListener {
 
 		Insets buttonMargin = new Insets(4, 4, 4, 4);
 
-		yesButton = new JButton("Yes");
+		yesButton = new JButton("Yes");			// HRK COmment: COde repitition. Should be in one function.
 		JPanel yesButtonPanel = new JPanel();
 		yesButtonPanel.setLayout(new FlowLayout());
 		yesButton.addActionListener(this);
 		yesButtonPanel.add(yesButton);
 
 		noButton = new JButton("No");
-		JPanel noButtonPanel = new JPanel();
-		noButtonPanel.setLayout(new FlowLayout());
+		JPanel noButtonPanel = new JPanel();			// HRK COmment: Code repitition. Should be in one function.
+		noButtonPanel.setLayout(new FlowLayout());		
 		noButton.addActionListener(this);
 		noButtonPanel.add(noButton);
 
@@ -108,4 +108,3 @@ public class EndGamePrompt implements ActionListener {
 	}
 	
 }
-

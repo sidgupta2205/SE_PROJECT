@@ -28,7 +28,12 @@ public class LaneView implements LaneObserver, ActionListener {
 
 	JButton maintenance;
 	Lane lane;
-
+	public void addButton(JButton mybutton,JPanel myPanel) {
+		myPanel.setLayout(new FlowLayout());
+		mybutton.addActionListener(this);
+		myPanel.add(mybutton);
+		
+	}
 	public LaneView(Lane lane, int laneNum) {
 
 		this.lane = lane;
@@ -148,10 +153,7 @@ public class LaneView implements LaneObserver, ActionListener {
 
 				maintenance = new JButton("Maintenance Call");
 				JPanel maintenancePanel = new JPanel();
-				maintenancePanel.setLayout(new FlowLayout());
-				maintenance.addActionListener(this);
-				maintenancePanel.add(maintenance);
-
+				addButton(maintenance,maintenancePanel);
 				buttonPanel.add(maintenancePanel);
 
 				cpanel.add(buttonPanel, "South");

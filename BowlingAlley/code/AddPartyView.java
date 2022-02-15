@@ -38,7 +38,9 @@ import java.text.*;
  * Constructor for GUI used to Add Parties to the waiting party queue.
  *  
  */
-
+	 
+	 // HRK code: very messy code for calculating score. We can use this link to calculate scores. https://github.com/klucar/bowling
+	 // Type of code smell: Long method.
 public class AddPartyView implements ActionListener, ListSelectionListener {
 
 	private int maxSize;
@@ -52,7 +54,12 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 	private ControlDeskView controlDesk;
 
 	private String selectedNick, selectedMember;
-
+	public void addButton(JButton mybutton,JPanel myPanel) {
+		myPanel.setLayout(new FlowLayout());
+		mybutton.addActionListener(this);
+		myPanel.add(mybutton);
+		
+	}
 	public AddPartyView(ControlDeskView controlDesk, int max) {
 
 		this.controlDesk = controlDesk;
@@ -64,28 +71,25 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 
 		JPanel colPanel = new JPanel();
 		colPanel.setLayout(new GridLayout(1, 3));
+		GeneralView gview=new GeneralView();
 
 		// Party Panel
 		JPanel partyPanel = new JPanel();
-		partyPanel.setLayout(new FlowLayout());
-		partyPanel.setBorder(new TitledBorder("Your Party"));
+		gview.setFlowLayout(partyPanel, "Your Party");
 
 		party = new Vector();
 		Vector empty = new Vector();
 		empty.add("(Empty)");
 
 		partyList = new JList(empty);
-		partyList.setFixedCellWidth(120);
-		partyList.setVisibleRowCount(5);
+		gview.addJList(partyList, 5, 120);
 		partyList.addListSelectionListener(this);
 		JScrollPane partyPane = new JScrollPane(partyList);
-		//        partyPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		partyPanel.add(partyPane);
 
 		// Bowler Database
 		JPanel bowlerPanel = new JPanel();
-		bowlerPanel.setLayout(new FlowLayout());
-		bowlerPanel.setBorder(new TitledBorder("Bowler Database"));
+		gview.setFlowLayout(bowlerPanel, "Bowler Database");
 
 		try {
 			bowlerdb = new Vector(BowlerFile.getBowlers());
@@ -94,8 +98,7 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 			bowlerdb = new Vector();
 		}
 		allBowlers = new JList(bowlerdb);
-		allBowlers.setVisibleRowCount(8);
-		allBowlers.setFixedCellWidth(120);
+		gview.addJList(allBowlers,8,120);
 		JScrollPane bowlerPane = new JScrollPane(allBowlers);
 		bowlerPane.setVerticalScrollBarPolicy(
 			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -106,31 +109,21 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(4, 1));
 
-		Insets buttonMargin = new Insets(4, 4, 4, 4);
-
 		addPatron = new JButton("Add to Party");
 		JPanel addPatronPanel = new JPanel();
-		addPatronPanel.setLayout(new FlowLayout());
-		addPatron.addActionListener(this);
-		addPatronPanel.add(addPatron);
+		addButton(addPatron, addPatronPanel);
 
 		remPatron = new JButton("Remove Member");
 		JPanel remPatronPanel = new JPanel();
-		remPatronPanel.setLayout(new FlowLayout());
-		remPatron.addActionListener(this);
-		remPatronPanel.add(remPatron);
+		addButton(remPatron,remPatronPanel);
 
 		newPatron = new JButton("New Patron");
 		JPanel newPatronPanel = new JPanel();
-		newPatronPanel.setLayout(new FlowLayout());
-		newPatron.addActionListener(this);
-		newPatronPanel.add(newPatron);
+		addButton(newPatron, newPatronPanel);
 
 		finished = new JButton("Finished");
 		JPanel finishedPanel = new JPanel();
-		finishedPanel.setLayout(new FlowLayout());
-		finished.addActionListener(this);
-		finishedPanel.add(finished);
+		addButton(finished, finishedPanel);
 
 		buttonPanel.add(addPatronPanel);
 		buttonPanel.add(remPatronPanel);
@@ -166,16 +159,16 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 				}
 			}
 		}
-		if (e.getSource().equals(remPatron)) {
+		else if (e.getSource().equals(remPatron)) {
 			if (selectedMember != null) {
 				party.removeElement(selectedMember);
 				partyList.setListData(party);
 			}
 		}
-		if (e.getSource().equals(newPatron)) {
+		else if (e.getSource().equals(newPatron)) {
 			NewPatronView newPatron = new NewPatronView( this );
 		}
-		if (e.getSource().equals(finished)) {
+		else if (e.getSource().equals(finished)) {
 			if ( party != null && party.size() > 0) {
 				controlDesk.updateAddParty( this );
 			}

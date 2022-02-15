@@ -36,7 +36,14 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 	 * Displays a GUI representation of the ControlDesk
 	 *
 	 */
-
+// HRK Comment: Code Smell: The constructor is large in size. addParty button and finished Button are doing one and the same thing.
+// We can create a different function addButton(object refernce of colPanel) {return object of button.} 
+	public void addButton(JButton mybutton,JPanel myPanel) {
+		myPanel.setLayout(new FlowLayout());
+		mybutton.addActionListener(this);
+		myPanel.add(mybutton);
+		
+	}
 	public ControlDeskView(ControlDesk controlDesk, int maxMembers) {
 
 		this.controlDesk = controlDesk;
@@ -47,39 +54,28 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		win.getContentPane().setLayout(new BorderLayout());
 		((JPanel) win.getContentPane()).setOpaque(false);
 
+		GeneralView gview=new GeneralView();
+		
 		JPanel colPanel = new JPanel();
 		colPanel.setLayout(new BorderLayout());
 
 		// Controls Panel
 		JPanel controlsPanel = new JPanel();
-		controlsPanel.setLayout(new GridLayout(3, 1));
-		controlsPanel.setBorder(new TitledBorder("Controls"));
+		gview.setGridLayout(controlsPanel, 3, 1, "Controls");
 
 		addParty = new JButton("Add Party");
-		JPanel addPartyPanel = new JPanel();
-		addPartyPanel.setLayout(new FlowLayout());
-		addParty.addActionListener(this);
-		addPartyPanel.add(addParty);
+		JPanel addPartyPanel = new JPanel();	// HRK Comment: Must be done in a separate function. So that it is easy to extend.
+		addButton(addParty,addPartyPanel);
 		controlsPanel.add(addPartyPanel);
 
-		assign = new JButton("Assign Lanes");
-		JPanel assignPanel = new JPanel();
-		assignPanel.setLayout(new FlowLayout());
-		assign.addActionListener(this);
-		assignPanel.add(assign);
-//		controlsPanel.add(assignPanel);
-
 		finished = new JButton("Finished");
-		JPanel finishedPanel = new JPanel();
-		finishedPanel.setLayout(new FlowLayout());
-		finished.addActionListener(this);
-		finishedPanel.add(finished);
+		JPanel finishedPanel = new JPanel();         // HRK Comment: Same code as addaParty button .
+		addButton(finished,finishedPanel);
 		controlsPanel.add(finishedPanel);
 
 		// Lane Status Panel
 		JPanel laneStatusPanel = new JPanel();
-		laneStatusPanel.setLayout(new GridLayout(numLanes, 1));
-		laneStatusPanel.setBorder(new TitledBorder("Lane Status"));
+		gview.setGridLayout(laneStatusPanel, numLanes, 1,"Lane Status");
 
 		HashSet lanes=controlDesk.getLanes();
 		Iterator it = lanes.iterator();
@@ -87,7 +83,7 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		while (it.hasNext()) {
 			Lane curLane = (Lane) it.next();
 			LaneStatusView laneStat = new LaneStatusView(curLane,(laneCount+1));
-			curLane.subscribe(laneStat);
+			curLane.subscribe(laneStat);                                            
 			((Pinsetter)curLane.getPinsetter()).subscribe(laneStat);
 			JPanel lanePanel = laneStat.showLane();
 			lanePanel.setBorder(new TitledBorder("Lane" + ++laneCount ));
@@ -96,15 +92,13 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 
 		// Party Queue Panel
 		JPanel partyPanel = new JPanel();
-		partyPanel.setLayout(new FlowLayout());
-		partyPanel.setBorder(new TitledBorder("Party Queue"));
+		gview.setFlowLayout(partyPanel,"Party Queue");
 
 		Vector empty = new Vector();
 		empty.add("(Empty)");
 
 		partyList = new JList(empty);
-		partyList.setFixedCellWidth(120);
-		partyList.setVisibleRowCount(10);
+		gview.addJList(partyList,10 ,120);
 		JScrollPane partyPane = new JScrollPane(partyList);
 		partyPane.setVerticalScrollBarPolicy(
 			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -112,8 +106,8 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		//		partyPanel.add(partyList);
 
 		// Clean up main panel
-		colPanel.add(controlsPanel, "East");
-		colPanel.add(laneStatusPanel, "Center");
+		colPanel.add(controlsPanel, "East");                   
+		colPanel.add(laneStatusPanel, "Center");                             
 		colPanel.add(partyPanel, "West");
 
 		win.getContentPane().add("Center", colPanel);

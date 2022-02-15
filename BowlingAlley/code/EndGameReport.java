@@ -26,7 +26,7 @@ public class EndGameReport implements ActionListener, ListSelectionListener {
 	private int result;
 
 	private String selectedMember;
-
+	//HRK Comment: Same code is getting repeated across the classes. COntrolDeskView,EndGame Prompt. Create a sepaarate class for creating JFrame Window.
 	public EndGameReport( String partyName, Party party ) {
 	
 		result =0;
@@ -140,4 +140,3 @@ public class EndGameReport implements ActionListener, ListSelectionListener {
 	}
 	
 }
-
