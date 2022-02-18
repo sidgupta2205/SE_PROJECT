@@ -36,8 +36,7 @@ class BowlerFile {
      * 
      */
 
-	public static Bowler getBowlerInfo(String nickName)
-		throws IOException, FileNotFoundException {
+	public static Bowler getBowlerInfo(String nickName) throws IOException, FileNotFoundException {
 
 		BufferedReader in = new BufferedReader(new FileReader(BOWLER_DAT));
 		String data;
@@ -45,13 +44,7 @@ class BowlerFile {
 			// File format is nick\tfname\te-mail
 			String[] bowler = data.split("\t");
 			if (nickName.equals(bowler[0])) {
-				System.out.println(
-					"Nick: "
-						+ bowler[0]
-						+ " Full: "
-						+ bowler[1]
-						+ " email: "
-						+ bowler[2]);
+				System.out.println("Nick: "+ bowler[0] + " Full: " + bowler[1] + " email: "+ bowler[2]);
 				return (new Bowler(bowler[0], bowler[1], bowler[2]));
 			}
 		}
@@ -68,14 +61,9 @@ class BowlerFile {
      *
      */
 
-	public static void putBowlerInfo(
-		String nickName,
-		String fullName,
-		String email)
+	public static void putBowlerInfo(String nickName,String fullName,String email)
 		throws IOException, FileNotFoundException {
-
 		String data = nickName + "\t" + fullName + "\t" + email + "\n";
-
 		RandomAccessFile out = new RandomAccessFile(BOWLER_DAT, "rw");
 		out.skipBytes((int) out.length());
 		out.writeBytes(data);
@@ -89,11 +77,8 @@ class BowlerFile {
      * 
      */
 
-	public static Vector getBowlers()
-		throws IOException, FileNotFoundException {
-
+	public static Vector getBowlers()throws IOException, FileNotFoundException {
 		Vector allBowlers = new Vector();
-
 		BufferedReader in = new BufferedReader(new FileReader(BOWLER_DAT));
 		String data;
 		while ((data = in.readLine()) != null) {
