@@ -47,13 +47,10 @@ class ControlDesk extends Thread {
 
 	/** The collection of Lanes */
 	private HashSet lanes;
-
 	/** The party wait queue */
 	private Queue partyQueue;
-
 	/** The number of lanes represented */
 	private int numLanes;
-	
 	/** The collection of subscribers */
 	private Vector subscribers;
 
@@ -68,15 +65,11 @@ class ControlDesk extends Thread {
 		this.numLanes = numLanes;
 		lanes = new HashSet(numLanes);
 		partyQueue = new Queue();
-
 		subscribers = new Vector();
-
 		for (int i = 0; i < numLanes; i++) {
 			lanes.add(new Lane());
 		}
-		
 		this.start();
-
 	}
 	
 	/**
@@ -85,9 +78,7 @@ class ControlDesk extends Thread {
 	 */
 	public void run() {
 		while (true) {
-			
 			assignLane();
-			
 			try {
 				sleep(250);
 			} catch (Exception e) {}
@@ -106,18 +97,14 @@ class ControlDesk extends Thread {
 
 	private Bowler registerPatron(String nickName) {
 		Bowler patron = null;
-
 		try {
 			// only one patron / nick.... no dupes, no checks
-
 			patron = BowlerFile.getBowlerInfo(nickName);
-
 		} catch (FileNotFoundException e) {
 			System.err.println("Error..." + e);
 		} catch (IOException e) {
 			System.err.println("Error..." + e);
 		}
-
 		return patron;
 	}
 
@@ -128,10 +115,8 @@ class ControlDesk extends Thread {
 
 	public void assignLane() {
 		Iterator it = lanes.iterator();
-
 		while (it.hasNext() && partyQueue.hasMoreElements()) {
 			Lane curLane = (Lane) it.next();
-
 			if (curLane.isPartyAssigned() == false) {
 				System.out.println("ok... assigning this party");
 				curLane.assignParty(((Party) partyQueue.next()));
