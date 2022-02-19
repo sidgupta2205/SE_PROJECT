@@ -1,4 +1,5 @@
 package Views;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
@@ -13,7 +14,10 @@ public class GeneralView {
 		myList.setVisibleRowCount(visibleRowCount);
 		myList.setFixedCellWidth(FixedCellWidth);
 	}
-
+	public void addButton(JButton mybutton,JPanel myPanel) {
+		myPanel.setLayout(new FlowLayout());
+		myPanel.add(mybutton);
+	}
 	public void setFlowLayout(JPanel myPanel, String title) {
 		myPanel.setLayout(new FlowLayout());
 		if(title.length()>0) {
