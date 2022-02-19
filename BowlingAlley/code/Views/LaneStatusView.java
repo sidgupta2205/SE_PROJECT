@@ -21,7 +21,7 @@ import controllers.LaneEvent;
 import controllers.LaneObserver;
 import models.Pinsetter;
 
-public class LaneStatusView implements ActionListener, LaneObserver, PinsetterObserver {
+public class LaneStatusView implements LaneObserver, PinsetterObserver {
 
 	private JPanel jp;
 
@@ -39,12 +39,6 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 	
 	// HRK Comment: Create a separate class which will be inherited by all the classes who wants to create a view. 
 	// Code Smell: Code duplication.
-	public void addButton(JButton mybutton,JPanel myPanel) {
-		myPanel.setLayout(new FlowLayout());
-		mybutton.addActionListener(this);
-		myPanel.add(mybutton);
-		
-	}
 	public LaneStatusView(Lane lane, int laneNum ) {
 
 		this.lane = lane;
@@ -59,7 +53,7 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 
 		lv = new LaneView( lane, laneNum );
 		lane.subscribe(lv);
-
+		GeneralView gview=new GeneralView();
 
 		jp = new JPanel();
 		jp.setLayout(new FlowLayout());
@@ -77,17 +71,56 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 		Insets buttonMargin = new Insets(4, 4, 4, 4);
 
 		viewLane = new JButton("View Lane");
+		viewLane.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if ( lane.isPartyAssigned() ) { 
+					if ( laneShowing == false ) {
+						lv.show();
+						laneShowing=true;
+					} else if ( laneShowing == true ) {
+						lv.hide();
+						laneShowing=false;
+					}
+				}
+			}
+		});
 		JPanel viewLanePanel = new JPanel();
-		addButton(viewLane,viewLanePanel);
+		gview.addButton(viewLane,viewLanePanel);
 
 		viewPinSetter = new JButton("Pinsetter");
+		viewPinSetter.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if ( lane.isPartyAssigned() ) { 
+					if (e.getSource().equals(viewPinSetter)) {
+						if ( psShowing == false ) {
+							psv.show();
+							psShowing=true;
+						} else if ( psShowing == true ) {
+							psv.hide();
+							psShowing=false;
+						}
+					}
+				}
+			}
+		});
 		JPanel viewPinSetterPanel = new JPanel();
-		addButton(viewPinSetter, viewPinSetterPanel);
+		gview.addButton(viewPinSetter, viewPinSetterPanel);
 
 		maintenance = new JButton("     ");
 		maintenance.setBackground( Color.GREEN );
+		maintenance.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if ( lane.isPartyAssigned() ) {
+					lane.unPauseGame();
+					maintenance.setBackground( Color.GREEN );
+				}
+			}
+		});
 		JPanel maintenancePanel = new JPanel();
-		addButton(maintenance, maintenancePanel);
+		gview.addButton(maintenance, maintenancePanel);
 
 		viewLane.setEnabled( false );
 		viewPinSetter.setEnabled( false );
@@ -108,37 +141,6 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 
 	public JPanel showLane() {
 		return jp;
-	}
-
-	public void actionPerformed( ActionEvent e ) {
-		if ( lane.isPartyAssigned() ) { 
-			if (e.getSource().equals(viewPinSetter)) {
-				if ( psShowing == false ) {
-					psv.show();
-					psShowing=true;
-				} else if ( psShowing == true ) {
-					psv.hide();
-					psShowing=false;
-				}
-			}
-		}
-		if (e.getSource().equals(viewLane)) {
-			if ( lane.isPartyAssigned() ) { 
-				if ( laneShowing == false ) {
-					lv.show();
-					laneShowing=true;
-				} else if ( laneShowing == true ) {
-					lv.hide();
-					laneShowing=false;
-				}
-			}
-		}
-		if (e.getSource().equals(maintenance)) {
-			if ( lane.isPartyAssigned() ) {
-				lane.unPauseGame();
-				maintenance.setBackground( Color.GREEN );
-			}
-		}
 	}
 
 	public void receiveLaneEvent(LaneEvent le) {
