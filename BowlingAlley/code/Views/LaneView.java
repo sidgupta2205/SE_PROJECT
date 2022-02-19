@@ -33,15 +33,10 @@ public class LaneView implements LaneObserver, ActionListener {
 	JLabel[][] scoreLabel;
 	JPanel[][] ballGrid;
 	JPanel[] pins;
-
+	GeneralView gview=new GeneralView();
 	JButton maintenance;
 	Lane lane;
-	public void addButton(JButton mybutton,JPanel myPanel) {
-		myPanel.setLayout(new FlowLayout());
-		mybutton.addActionListener(this);
-		myPanel.add(mybutton);
-		
-	}
+
 	public LaneView(Lane lane, int laneNum) {
 
 		this.lane = lane;
@@ -161,7 +156,7 @@ public class LaneView implements LaneObserver, ActionListener {
 
 				maintenance = new JButton("Maintenance Call");
 				JPanel maintenancePanel = new JPanel();
-				addButton(maintenance,maintenancePanel);
+				gview.addButton(maintenance,maintenancePanel);
 				buttonPanel.add(maintenancePanel);
 
 				cpanel.add(buttonPanel, "South");
