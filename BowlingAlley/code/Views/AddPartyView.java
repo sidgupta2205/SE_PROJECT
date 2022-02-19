@@ -45,7 +45,7 @@ import java.text.*;
 	 
 	 // HRK code: very messy code for calculating score. We can use this link to calculate scores. https://github.com/klucar/bowling
 	 // Type of code smell: Long method.
-public class AddPartyView implements ActionListener, ListSelectionListener {
+public class AddPartyView implements ListSelectionListener {
 
 	private int maxSize;
 
@@ -58,17 +58,13 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 	private Integer lock;
 
 	private ControlDeskView controlDesk;
-
+	private AddPartyView addpartyView;
 	private String selectedNick, selectedMember;
-	public void addButton(JButton mybutton,JPanel myPanel) {
-		myPanel.setLayout(new FlowLayout());
-		mybutton.addActionListener(this);
-		myPanel.add(mybutton);
-		
-	}
+
 	public AddPartyView(ControlDeskView controlDesk, int max) {
 
 		this.controlDesk = controlDesk;
+		this.addpartyView = this;
 		maxSize = max;
 
 		win = new JFrame("Add Party");
@@ -116,20 +112,57 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 		buttonPanel.setLayout(new GridLayout(4, 1));
 
 		addPatron = new JButton("Add to Party");
+		addPatron.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (selectedNick != null && party.size() < maxSize) {
+					if (party.contains(selectedNick)) {
+						System.err.println("Member already in Party");
+					} else {
+						party.add(selectedNick);
+						partyList.setListData(party);
+					}
+				}
+			}
+		});
 		JPanel addPatronPanel = new JPanel();
-		addButton(addPatron, addPatronPanel);
+		gview.addButton(addPatron, addPatronPanel);
 
 		remPatron = new JButton("Remove Member");
+		remPatron.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (selectedMember != null) {
+					party.removeElement(selectedMember);
+					partyList.setListData(party);
+				}
+			}
+		});
 		JPanel remPatronPanel = new JPanel();
-		addButton(remPatron,remPatronPanel);
+		gview.addButton(remPatron,remPatronPanel);
 
 		newPatron = new JButton("New Patron");
+		newPatron.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				NewPatronView newPatron = new NewPatronView(addpartyView);
+			}
+		});
 		JPanel newPatronPanel = new JPanel();
-		addButton(newPatron, newPatronPanel);
+		gview.addButton(newPatron, newPatronPanel);
 
 		finished = new JButton("Finished");
+		finished.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if ( party != null && party.size() > 0) {
+					controlDesk.updateAddParty(addpartyView);
+				}
+				win.hide();
+			}
+		});
 		JPanel finishedPanel = new JPanel();
-		addButton(finished, finishedPanel);
+		gview.addButton(finished, finishedPanel);
 
 		buttonPanel.add(addPatronPanel);
 		buttonPanel.add(remPatronPanel);
@@ -154,34 +187,6 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(addPatron)) {
-			if (selectedNick != null && party.size() < maxSize) {
-				if (party.contains(selectedNick)) {
-					System.err.println("Member already in Party");
-				} else {
-					party.add(selectedNick);
-					partyList.setListData(party);
-				}
-			}
-		}
-		else if (e.getSource().equals(remPatron)) {
-			if (selectedMember != null) {
-				party.removeElement(selectedMember);
-				partyList.setListData(party);
-			}
-		}
-		else if (e.getSource().equals(newPatron)) {
-			NewPatronView newPatron = new NewPatronView( this );
-		}
-		else if (e.getSource().equals(finished)) {
-			if ( party != null && party.size() > 0) {
-				controlDesk.updateAddParty( this );
-			}
-			win.hide();
-		}
-
-	}
 
 /**
  * Handler for List actions
