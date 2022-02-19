@@ -38,7 +38,7 @@ import models.ControlDesk;
 import models.Lane;
 import models.Pinsetter;
 
-public class ControlDeskView implements ActionListener, ControlDeskObserver {
+public class ControlDeskView implements ControlDeskObserver {
 
 	private JButton addParty, finished, assign;
 	private JFrame win;
@@ -48,6 +48,7 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 	private int maxMembers;
 	
 	private ControlDesk controlDesk;
+	private ControlDeskView CDView;
 
 	/**
 	 * Displays a GUI representation of the ControlDesk
@@ -55,14 +56,8 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 	 */
 // HRK Comment: Code Smell: The constructor is large in size. addParty button and finished Button are doing one and the same thing.
 // We can create a different function addButton(object refernce of colPanel) {return object of button.} 
-	public void addButton(JButton mybutton,JPanel myPanel) {
-		myPanel.setLayout(new FlowLayout());
-		mybutton.addActionListener(this);
-		myPanel.add(mybutton);
-		
-	}
 	public ControlDeskView(ControlDesk controlDesk, int maxMembers) {
-
+		this.CDView = this;
 		this.controlDesk = controlDesk;
 		this.maxMembers = maxMembers;
 		int numLanes = controlDesk.getNumLanes();
@@ -82,12 +77,25 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 
 		addParty = new JButton("Add Party");
 		JPanel addPartyPanel = new JPanel();	// HRK Comment: Must be done in a separate function. So that it is easy to extend.
-		addButton(addParty,addPartyPanel);
+		addParty.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AddPartyView addPartyWin = new AddPartyView(CDView, maxMembers);
+			}
+		});
+		gview.addButton(addParty,addPartyPanel);
 		controlsPanel.add(addPartyPanel);
 
 		finished = new JButton("Finished");
 		JPanel finishedPanel = new JPanel();         // HRK Comment: Same code as addaParty button .
-		addButton(finished,finishedPanel);
+		finished.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				win.hide();
+				System.exit(0);
+			}
+		});
+		gview.addButton(finished,finishedPanel);
 		controlsPanel.add(finishedPanel);
 
 		// Lane Status Panel
@@ -147,25 +155,6 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 
 	}
 
-	/**
-	 * Handler for actionEvents
-	 *
-	 * @param e	the ActionEvent that triggered the handler
-	 *
-	 */
-
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(addParty)) {
-			AddPartyView addPartyWin = new AddPartyView(this, maxMembers);
-		}
-		if (e.getSource().equals(assign)) {
-			controlDesk.assignLane();
-		}
-		if (e.getSource().equals(finished)) {
-			win.hide();
-			System.exit(0);
-		}
-	}
 
 	/**
 	 * Receive a new party from andPartyView.
