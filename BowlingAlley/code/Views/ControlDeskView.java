@@ -15,7 +15,6 @@ package Views;
  */
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,7 +39,7 @@ import models.Pinsetter;
 
 public class ControlDeskView implements ControlDeskObserver {
 
-	private JButton addParty, finished, assign;
+	private JButton addParty, finished;
 	private JFrame win;
 	private JList partyList;
 	
@@ -50,12 +49,7 @@ public class ControlDeskView implements ControlDeskObserver {
 	private ControlDesk controlDesk;
 	private ControlDeskView CDView;
 
-	/**
-	 * Displays a GUI representation of the ControlDesk
-	 *
-	 */
-// HRK Comment: Code Smell: The constructor is large in size. addParty button and finished Button are doing one and the same thing.
-// We can create a different function addButton(object refernce of colPanel) {return object of button.} 
+	/*  Displays a GUI representation of the ControlDesk */
 	public ControlDeskView(ControlDesk controlDesk, int maxMembers) {
 		this.CDView = this;
 		this.controlDesk = controlDesk;
@@ -76,7 +70,7 @@ public class ControlDeskView implements ControlDeskObserver {
 		gview.setGridLayout(controlsPanel, 3, 1, "Controls");
 
 		addParty = new JButton("Add Party");
-		JPanel addPartyPanel = new JPanel();	// HRK Comment: Must be done in a separate function. So that it is easy to extend.
+		JPanel addPartyPanel = new JPanel();	
 		addParty.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -87,7 +81,7 @@ public class ControlDeskView implements ControlDeskObserver {
 		controlsPanel.add(addPartyPanel);
 
 		finished = new JButton("Finished");
-		JPanel finishedPanel = new JPanel();         // HRK Comment: Same code as addaParty button .
+		JPanel finishedPanel = new JPanel();       
 		finished.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -128,7 +122,7 @@ public class ControlDeskView implements ControlDeskObserver {
 		partyPane.setVerticalScrollBarPolicy(
 			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		partyPanel.add(partyPane);
-		//		partyPanel.add(partyList);
+		//	partyPanel.add(partyList);
 
 		// Clean up main panel
 		colPanel.add(controlsPanel, "East");                   
@@ -136,7 +130,6 @@ public class ControlDeskView implements ControlDeskObserver {
 		colPanel.add(partyPanel, "West");
 
 		win.getContentPane().add("Center", colPanel);
-
 		win.pack();
 
 		/* Close program when this window closes */
