@@ -53,11 +53,11 @@ import java.io.*;
 public class ControlDesk extends Thread {
 
 	/** The collection of Lanes */
-	HashSet lanes;
+	public HashSet lanes;
 	/** The party wait queue */
 	private Queue partyQueue;
 	/** The number of lanes represented */
-	private int numLanes;
+	public  int numLanes;
 	/** The collection of subscribers */
 	private Vector subscribers;
 
@@ -102,18 +102,18 @@ public class ControlDesk extends Thread {
      *
      */
 
-	private Bowler registerPatron(String nickName) {
-		Bowler patron = null;
-		try {
-			// only one patron / nick.... no dupes, no checks
-			patron = BowlerFile.getBowlerInfo(nickName);
-		} catch (FileNotFoundException e) {
-			System.err.println("Error..." + e);
-		} catch (IOException e) {
-			System.err.println("Error..." + e);
-		}
-		return patron;
-	}
+//	private Bowler registerPatron(String nickName) {
+//		Bowler patron = null;
+//		try {
+//			// only one patron / nick.... no dupes, no checks
+//			patron = BowlerFile.getBowlerInfo(nickName);
+//		} catch (FileNotFoundException e) {
+//			System.err.println("Error..." + e);
+//		} catch (IOException e) {
+//			System.err.println("Error..." + e);
+//		}
+//		return patron;
+//	}
 
     /**
      * Iterate through the available lanes and assign the paties in the wait queue if lanes are available.
@@ -135,9 +135,10 @@ public class ControlDesk extends Thread {
     /**
      */
 
-	public void viewScores(Lane ln) {
-		// TODO: attach a LaneScoreView object to that lane
-	}
+//	
+//	public void viewScores(Lane ln) {
+//		// TODO: attach a LaneScoreView object to that lane
+//	}
 
     /**
      * Creates a party from a Vector of nickNAmes and adds them to the wait queue.
@@ -151,7 +152,7 @@ public class ControlDesk extends Thread {
 		
 		Vector partyBowlers = new Vector();
 		for (int i = 0; i < partyNicks.size(); i++) {
-			Bowler newBowler = registerPatron(((String) partyNicks.get(i)));
+			Bowler newBowler = BowlerFile.registerPatron(((String) partyNicks.get(i)));
 			partyBowlers.add(newBowler);
 		}
 		
@@ -194,9 +195,10 @@ public class ControlDesk extends Thread {
      *
      */
 
-	public int getNumLanes() {
-		return numLanes;
-	}
+//	
+//	public int getNumLanes() {
+//		return numLanes;
+//	}
 
     /**
      * Allows objects to subscribe as observers
@@ -233,8 +235,8 @@ public class ControlDesk extends Thread {
      * @return a HashSet of Lanes
      *
      */
-
-	public HashSet getLanes() {
-		return lanes;
-	}
+//	
+//	public HashSet getLanes() {
+//		return lanes;
+//	}
 }

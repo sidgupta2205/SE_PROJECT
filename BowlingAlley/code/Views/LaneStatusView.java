@@ -25,7 +25,7 @@ public class LaneStatusView implements LaneObserver, PinsetterObserver {
 
 	private JPanel jp;
 
-	private JLabel curBowler, foul, pinsDown;
+	private JLabel curBowler, pinsDown, foul;
 	private JButton viewLane;
 	private JButton viewPinSetter, maintenance;
 
@@ -36,9 +36,7 @@ public class LaneStatusView implements LaneObserver, PinsetterObserver {
 
 	boolean laneShowing;
 	boolean psShowing;
-	
-	// HRK Comment: Create a separate class which will be inherited by all the classes who wants to create a view. 
-	// Code Smell: Code duplication.
+
 	public LaneStatusView(Lane lane, int laneNum ) {
 
 		this.lane = lane;
@@ -134,7 +132,6 @@ public class LaneStatusView implements LaneObserver, PinsetterObserver {
 		jp.add( curBowler );
 		jp.add( pdLabel );
 		jp.add( pinsDown );
-		
 		jp.add(buttonPanel);
 
 	}
@@ -144,23 +141,22 @@ public class LaneStatusView implements LaneObserver, PinsetterObserver {
 	}
 
 	public void receiveLaneEvent(LaneEvent le) {
-		curBowler.setText( ( (Bowler)le.getBowler()).getNick() );
-		if ( le.isMechanicalProblem() ) {
+		curBowler.setText( ( (Bowler)le.bowler).getNick() );
+		if ( le.mechProb ) {
 			maintenance.setBackground( Color.RED );
 		}	
 		if ( lane.isPartyAssigned() == false ) {
 			viewLane.setEnabled( false );
 			viewPinSetter.setEnabled( false );
-		} else {
+		} 
+		else {
 			viewLane.setEnabled( true );
 			viewPinSetter.setEnabled( true );
 		}
 	}
 
 	public void receivePinsetterEvent(PinsetterEvent pe) {
-		pinsDown.setText( ( new Integer(pe.totalPinsDown()) ).toString() );
-//		foul.setText( ( new Boolean(pe.isFoulCommited()) ).toString() );
-		
+		pinsDown.setText( ( new Integer(pe.totalPinsDown()) ).toString());		
 	}
 
 }

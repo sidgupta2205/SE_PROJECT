@@ -29,7 +29,7 @@ import java.io.*;
 public class BowlerFile {
 
 	/** The location of the bowelr database */
-	private static String BOWLER_DAT = "D:\\iiith\\git_repo\\IIITH\\assignments\\SE\\BowlingAlley\\code\\BOWLERS.DAT";
+	private static String BOWLER_DAT = "/home/hussain/Desktop/Sem2/SE/SE_PROJECT-master/BowlingAlley/code/BOWLERS.DAT";
 
     /**
      * Retrieves bowler information from the database and returns a Bowler objects with populated fields.
@@ -92,6 +92,19 @@ public class BowlerFile {
 			allBowlers.add(bowler[0]);
 		}
 		return allBowlers;
+	}
+	
+	public static Bowler registerPatron(String nickName) {
+		Bowler patron = null;
+		try {
+			// only one patron / nick.... no dupes, no checks
+			patron = BowlerFile.getBowlerInfo(nickName);
+		} catch (FileNotFoundException e) {
+			System.err.println("Error..." + e);
+		} catch (IOException e) {
+			System.err.println("Error..." + e);
+		}
+		return patron;
 	}
 
 }

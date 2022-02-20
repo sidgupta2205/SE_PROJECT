@@ -74,7 +74,6 @@ public class PinSetterView implements PinsetterObserver {
 	
 	//**********************Grid of the pins**************************
 	
-	// HRK COmment: Grid of pins should be represented using array and use for loop to populate it..
 	JPanel one = new JPanel ();
 	JLabel oneL = new JLabel ( "1" );
 	one.add (oneL);
