@@ -1,173 +1,162 @@
 package Views;
-/* ControlDeskView.java
- *
- *  Version:
- *			$Id$
- * 
- *  Revisions:
- * 		$Log$
- * 
- */
-
 /**
- * Class for representation of the control desk
  *
+ * To change this generated comment edit the template variable "typecomment":
+ * Window>Preferences>Java>Templates.
+ * To enable and disable the creation of type comments go to
+ * Window>Preferences>Java>Code Generation.
  */
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Vector;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.event.*;
 
-import controllers.ControlDeskEvent;
-import controllers.ControlDeskObserver;
-import models.ControlDesk;
+import controllers.PinsetterEvent;
+import controllers.PinsetterObserver;
+import models.Bowler;
 import models.Lane;
+import controllers.LaneEvent;
+import controllers.LaneObserver;
 import models.Pinsetter;
 
-public class ControlDeskView implements ControlDeskObserver {
+public class LaneStatusView implements LaneObserver, PinsetterObserver {
 
-	private JButton addParty, finished;
-	private JFrame win;
-	private JList partyList;
-	
-	/** The maximum  number of members in a party */
-	private int maxMembers;
-	
-	private ControlDesk controlDesk;
-	private ControlDeskView CDView;
+	private JPanel jp;
 
-	/*  Displays a GUI representation of the ControlDesk */
-	public ControlDeskView(ControlDesk controlDesk, int maxMembers) {
-		this.CDView = this;
-		this.controlDesk = controlDesk;
-		this.maxMembers = maxMembers;
-		int numLanes = controlDesk.getNumLanes();
+	private JLabel curBowler, pinsDown, foul;
+	private JButton viewLane;
+	private JButton viewPinSetter, maintenance;
 
-		win = new JFrame("Control Desk");
-		win.getContentPane().setLayout(new BorderLayout());
-		((JPanel) win.getContentPane()).setOpaque(false);
+	private PinSetterView psv;
+	private LaneView lv;
+	private Lane lane;
+	int laneNum;
 
+	boolean laneShowing;
+	boolean psShowing;
+
+	public LaneStatusView(Lane lane, int laneNum ) {
+
+		this.lane = lane;
+		this.laneNum = laneNum;
+
+		laneShowing=false;
+		psShowing=false;
+
+		psv = new PinSetterView( laneNum );
+		Pinsetter ps = lane.getPinsetter();
+		ps.subscribe(psv);
+
+		lv = new LaneView( lane, laneNum );
+		lane.subscribe(lv);
 		GeneralView gview=new GeneralView();
-		
-		JPanel colPanel = new JPanel();
-		colPanel.setLayout(new BorderLayout());
 
-		// Controls Panel
-		JPanel controlsPanel = new JPanel();
-		gview.setGridLayout(controlsPanel, 3, 1, "Controls");
+		jp = new JPanel();
+		jp.setLayout(new FlowLayout());
+		JLabel cLabel = new JLabel( "Now Bowling: " );
+		curBowler = new JLabel( "(no one)" );
+		JLabel fLabel = new JLabel( "Foul: " );
+		foul = new JLabel( " " );
+		JLabel pdLabel = new JLabel( "Pins Down: " );
+		pinsDown = new JLabel( "0" );
 
-		addParty = new JButton("Add Party");
-		JPanel addPartyPanel = new JPanel();	
-		addParty.addActionListener(new ActionListener() {
+		// Button Panel
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout());
+
+		Insets buttonMargin = new Insets(4, 4, 4, 4);
+
+		viewLane = new JButton("View Lane");
+		viewLane.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AddPartyView addPartyWin = new AddPartyView(CDView, maxMembers);
+				if ( lane.isPartyAssigned() ) { 
+					if ( laneShowing == false ) {
+						lv.show();
+						laneShowing=true;
+					} else if ( laneShowing == true ) {
+						lv.hide();
+						laneShowing=false;
+					}
+				}
 			}
 		});
-		gview.addButton(addParty,addPartyPanel);
-		controlsPanel.add(addPartyPanel);
+		JPanel viewLanePanel = new JPanel();
+		gview.addButton(viewLane,viewLanePanel);
 
-		finished = new JButton("Finished");
-		JPanel finishedPanel = new JPanel();       
-		finished.addActionListener(new ActionListener() {
+		viewPinSetter = new JButton("Pinsetter");
+		viewPinSetter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				win.hide();
-				System.exit(0);
+				if ( lane.isPartyAssigned() ) { 
+					if (e.getSource().equals(viewPinSetter)) {
+						if ( psShowing == false ) {
+							psv.show();
+							psShowing=true;
+						} else if ( psShowing == true ) {
+							psv.hide();
+							psShowing=false;
+						}
+					}
+				}
 			}
 		});
-		gview.addButton(finished,finishedPanel);
-		controlsPanel.add(finishedPanel);
+		JPanel viewPinSetterPanel = new JPanel();
+		gview.addButton(viewPinSetter, viewPinSetterPanel);
 
-		// Lane Status Panel
-		JPanel laneStatusPanel = new JPanel();
-		gview.setGridLayout(laneStatusPanel, numLanes, 1,"Lane Status");
+		maintenance = new JButton("     ");
+		maintenance.setBackground( Color.GREEN );
+		maintenance.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if ( lane.isPartyAssigned() ) {
+					lane.unPauseGame();
+					maintenance.setBackground( Color.GREEN );
+				}
+			}
+		});
+		JPanel maintenancePanel = new JPanel();
+		gview.addButton(maintenance, maintenancePanel);
 
-		HashSet lanes=controlDesk.getLanes();
-		Iterator it = lanes.iterator();
-		int laneCount=0;
-		while (it.hasNext()) {
-			Lane curLane = (Lane) it.next();
-			LaneStatusView laneStat = new LaneStatusView(curLane,(laneCount+1));
-			curLane.subscribe(laneStat);                                            
-			((Pinsetter)curLane.getPinsetter()).subscribe(laneStat);
-			JPanel lanePanel = laneStat.showLane();
-			lanePanel.setBorder(new TitledBorder("Lane" + ++laneCount ));
-			laneStatusPanel.add(lanePanel);
+		viewLane.setEnabled( false );
+		viewPinSetter.setEnabled( false );
+
+
+		buttonPanel.add(viewLanePanel);
+		buttonPanel.add(viewPinSetterPanel);
+		buttonPanel.add(maintenancePanel);
+
+		jp.add( cLabel );
+		jp.add( curBowler );
+		jp.add( pdLabel );
+		jp.add( pinsDown );
+		jp.add(buttonPanel);
+
+	}
+
+	public JPanel showLane() {
+		return jp;
+	}
+
+	public void receiveLaneEvent(LaneEvent le) {
+		curBowler.setText( ( (Bowler)le.getBowler()).getNick() );
+		if ( le.isMechanicalProblem() ) {
+			maintenance.setBackground( Color.RED );
+		}	
+		if ( lane.isPartyAssigned() == false ) {
+			viewLane.setEnabled( false );
+			viewPinSetter.setEnabled( false );
+		} 
+		else {
+			viewLane.setEnabled( true );
+			viewPinSetter.setEnabled( true );
 		}
-
-		// Party Queue Panel
-		JPanel partyPanel = new JPanel();
-		gview.setFlowLayout(partyPanel,"Party Queue");
-
-		Vector empty = new Vector();
-		empty.add("(Empty)");
-
-		partyList = new JList(empty);
-		gview.addJList(partyList,10 ,120);
-		JScrollPane partyPane = new JScrollPane(partyList);
-		partyPane.setVerticalScrollBarPolicy(
-			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		partyPanel.add(partyPane);
-		//	partyPanel.add(partyList);
-
-		// Clean up main panel
-		colPanel.add(controlsPanel, "East");                   
-		colPanel.add(laneStatusPanel, "Center");                             
-		colPanel.add(partyPanel, "West");
-
-		win.getContentPane().add("Center", colPanel);
-		win.pack();
-
-		/* Close program when this window closes */
-		win.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
-
-		// Center Window on Screen
-		Dimension screenSize = (Toolkit.getDefaultToolkit()).getScreenSize();
-		win.setLocation(
-			((screenSize.width) / 2) - ((win.getSize().width) / 2),
-			((screenSize.height) / 2) - ((win.getSize().height) / 2));
-		win.show();
-
 	}
 
-
-	/**
-	 * Receive a new party from andPartyView.
-	 *
-	 * @param addPartyView	the AddPartyView that is providing a new party
-	 *
-	 */
-
-	public void updateAddParty(AddPartyView addPartyView) {
-		controlDesk.addPartyQueue(addPartyView.getParty());
+	public void receivePinsetterEvent(PinsetterEvent pe) {
+		pinsDown.setText( ( new Integer(pe.totalPinsDown()) ).toString());		
 	}
 
-	/**
-	 * Receive a broadcast from a ControlDesk
-	 *
-	 * @param ce	the ControlDeskEvent that triggered the handler
-	 *
-	 */
-
-	public void receiveControlDeskEvent(ControlDeskEvent ce) {
-		partyList.setListData(((Vector) ce.getPartyQueue()));
-	}
 }
