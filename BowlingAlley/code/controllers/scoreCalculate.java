@@ -16,7 +16,7 @@ public class scoreCalculate {
     public int[] userScores;
     public int[][] cumulScores;
     public int[][] finalScores;
-
+    private int High = 10892;
     
     
     // intializing party assigned
@@ -92,13 +92,16 @@ public class scoreCalculate {
     
 
     public void functionStrike(int i,int bowlIndex,int[] curScore){
-
+    	
+    	
 
         cumulScores[bowlIndex][i / 2] += 10;
         if (curScore[i + 1] != -1) {
             CreateInstance(curScore,true);
             cumulScores[bowlIndex][i / 2] += curScore[i + 1];
-            cumulScores[bowlIndex][i / 2] += cumulScores[bowlIndex][(i / 2) - 1];
+            
+            if(i>0)
+            		cumulScores[bowlIndex][i / 2] += cumulScores[bowlIndex][(i / 2) - 1];
             cumulScores[bowlIndex][i / 2] += curScore[i + 2];
         }
         else {
@@ -123,7 +126,7 @@ public class scoreCalculate {
 	}
     
     public boolean SpareBool(int[] curScore,int i,int current,int socre){
-    	if(socre!=83)
+    	if(socre==High)
     		return true;
         return (i % 2 == 1 && curScore[i - 1] + curScore[i] == 10 && i < current - 1);
    }

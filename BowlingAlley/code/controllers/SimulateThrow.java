@@ -50,7 +50,7 @@ public class SimulateThrow {
 		try {
 			Thread.sleep(500);				// pinsetter is where delay will be in a real game
 		} catch (Exception e) {}
-		System.out.println("Count is "+count);
+
 		return count;
 		
 	}

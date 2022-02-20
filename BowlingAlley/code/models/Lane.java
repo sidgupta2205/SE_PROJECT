@@ -254,9 +254,10 @@ public class Lane extends Thread implements PinsetterObserver {
 				
 				// TODO: send record of scores to control desk
 				if (result == 1) {					// yes, want to play again
+					ScCalculate.resetScores(party);
 					resetScores();
 					resetBowlerIterator();
-					
+//					publish(ScCalculate.lanePublish2(this,ball));
 				} else if (result == 2) {// no, dont want to play another game
 					Vector printVector;	
 					EndGameReport egr = new EndGameReport( ((Bowler)party.getMembers().get(0)).getNick() + "'s Party", party);
@@ -303,9 +304,8 @@ public class Lane extends Thread implements PinsetterObserver {
 	 */
 	public void receivePinsetterEvent(PinsetterEvent pe) {
 			
-			System.out.print("throw no "+pe.getThrowNumber());
+			
 			int score = pe.pinsDownOnThisThrow();
-			System.out.print("score is "+score+"\n");
 			if (pe.pinsDownOnThisThrow() >=  0) {			// this is a real throw
 				ScCalculate.markScore(this, ball, score);
 	
@@ -371,9 +371,6 @@ public class Lane extends Thread implements PinsetterObserver {
 			}
 			scores.put( bowlIt.next(), toPut );
 		}
-		
-		
-		
 		gameFinished = false;
 		frameNumber = 0;
 	}

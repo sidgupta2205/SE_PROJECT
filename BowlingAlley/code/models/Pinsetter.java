@@ -42,7 +42,7 @@ public class Pinsetter implements Serializable {
 	public void sendEvent(int jdpins) {
 		// send events when our state is changd
 //		throwNumber++;
-		System.out.println("send vene tetet eee");
+		
 		
 		for (int i=0; i < subscribers.size(); i++) {
 			((PinsetterObserver)subscribers.get(i)).receivePinsetterEvent(
@@ -107,7 +107,7 @@ public class Pinsetter implements Serializable {
 		} catch (Exception e) {}
 		
 		
-		//sendEvent(-1);
+		sendEvent(-1);
 	}
 
 	/** resetPins()
