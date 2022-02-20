@@ -18,7 +18,7 @@ import java.util.*;
 
 public class LaneView implements LaneObserver, ActionListener {
 
-	private int roll;
+	//private int roll;
 	private boolean initDone = true;
 
 	JFrame frame;
@@ -151,8 +151,6 @@ public class LaneView implements LaneObserver, ActionListener {
 				// Button Panel
 				JPanel buttonPanel = new JPanel();
 				buttonPanel.setLayout(new FlowLayout());
-
-				Insets buttonMargin = new Insets(4, 4, 4, 4);
 
 				maintenance = new JButton("Maintenance Call");
 				JPanel maintenancePanel = new JPanel();
