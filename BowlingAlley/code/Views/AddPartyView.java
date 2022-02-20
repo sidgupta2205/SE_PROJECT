@@ -29,41 +29,27 @@ package Views;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
 import javax.swing.event.*;
 
 import models.Bowler;
 import controllers.BowlerFile;
 
 import java.util.*;
-import java.text.*;
 
-/**
- * Constructor for GUI used to Add Parties to the waiting party queue.
- *  
- */
-	 
-	 // HRK code: very messy code for calculating score. We can use this link to calculate scores. https://github.com/klucar/bowling
-	 // Type of code smell: Long method.
+/* Constructor for GUI used to Add Parties to the waiting party queue.  */
 public class AddPartyView implements ListSelectionListener {
-
 	private int maxSize;
-
 	private JFrame win;
 	private JButton addPatron, newPatron, remPatron, finished;
 	private JList partyList, allBowlers;
 	Vector party;
 
 	private Vector bowlerdb;
-	private Integer lock;
 
-	private ControlDeskView controlDesk;
 	private AddPartyView addpartyView;
 	private String selectedNick, selectedMember;
 
 	public AddPartyView(ControlDeskView controlDesk, int max) {
-
-		this.controlDesk = controlDesk;
 		this.addpartyView = this;
 		maxSize = max;
 
@@ -195,19 +181,14 @@ public class AddPartyView implements ListSelectionListener {
 
 	public void valueChanged(ListSelectionEvent e) {
 		if (e.getSource().equals(allBowlers)) {
-			selectedNick =
-				((String) ((JList) e.getSource()).getSelectedValue());
+			selectedNick = ((String) ((JList) e.getSource()).getSelectedValue());
 		}
-		if (e.getSource().equals(partyList)) {
-			selectedMember =
-				((String) ((JList) e.getSource()).getSelectedValue());
+		else if (e.getSource().equals(partyList)) {
+			selectedMember = ((String) ((JList) e.getSource()).getSelectedValue());
 		}
 	}
 
-/**
- * Accessor for Party
- */
-
+/* Accessor for Party */
 	public Vector getNames() {
 		return party;
 	}
@@ -238,10 +219,7 @@ public class AddPartyView implements ListSelectionListener {
 		}
 	}
 
-/**
- * Accessor for Party
- */
-
+/* Accessor for Party */
 	public Vector getParty() {
 		return party;
 	}
