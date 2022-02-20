@@ -158,7 +158,15 @@ public class LaneView implements LaneObserver, ActionListener {
 				JPanel maintenancePanel = new JPanel();
 				gview.addButton(maintenance,maintenancePanel);
 				buttonPanel.add(maintenancePanel);
-
+				maintenance.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (e.getSource().equals(maintenance)) {
+							System.out.print("button called");
+							lane.pauseGame();
+						}
+					}
+				});
 				cpanel.add(buttonPanel, "South");
 
 				frame.pack();
@@ -205,10 +213,16 @@ public class LaneView implements LaneObserver, ActionListener {
 		}
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(maintenance)) {
-			lane.pauseGame();
+	@Override
+	
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource().equals(maintenance)) {
+				System.out.print("button called");
+				lane.pauseGame();
+			}
 		}
-	}
+	
+
+	
 
 }

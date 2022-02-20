@@ -267,7 +267,7 @@ public class Lane extends Thread implements PinsetterObserver {
 					party = null;
 					partyAssigned = false;
 					
-					publish(lanePublish());
+					publish(ScCalculate.lanePublish2(this,ball));
 					
 					int myIndex = 0;
 					while (scoreIt.hasNext()){
@@ -511,7 +511,8 @@ public class Lane extends Thread implements PinsetterObserver {
 	 */
 	public void pauseGame() {
 		gameIsHalted = true;
-		publish(lanePublish());
+		System.out.println("Game is paused");
+		publish(ScCalculate.lanePublish2(this,ball));
 	}
 	
 	/**
@@ -519,6 +520,6 @@ public class Lane extends Thread implements PinsetterObserver {
 	 */
 	public void unPauseGame() {
 		gameIsHalted = false;
-		publish(lanePublish());
+		publish(ScCalculate.lanePublish2(this,ball));
 	}
 }
