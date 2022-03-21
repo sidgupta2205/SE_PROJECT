@@ -29,14 +29,16 @@ public class PinsetterEvent {
 	 */
 	public PinsetterEvent(boolean[] ps, boolean foul, int tn, int pinsDownThisThrow) {
 		pinsStillStanding = new boolean[10];
-
+		
+		
+		
 		for (int i=0; i <= 9; i++) {
 			pinsStillStanding[i] = ps[i];
 		}
-		
 		foulCommited = foul;
 		throwNumber = tn;
 		this.pinsDownThisThrow = pinsDownThisThrow;
+		
 	}
 
 	/** pinKnockedDown()

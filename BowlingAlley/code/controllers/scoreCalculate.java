@@ -17,7 +17,7 @@ public class scoreCalculate {
     public int[][] cumulScores;
     public int[][] finalScores;
     private int High = 10892;
-    
+    boolean foul = false;
     
     // intializing party assigned
     public scoreCalculate(){
@@ -33,9 +33,9 @@ public class scoreCalculate {
         public void resetScores(Party party) {
 
         for (Object o : party.getMembers()) {
-            int[] toPut = new int[25];
+            int[] toPut = new int[30];
             int j = 0;
-            for (int i = 0; i != 25; i++) {
+            for (int i = 0; i != 30; i++) {
                 toPut[i] = -1;
                 j++;
             }
@@ -53,12 +53,39 @@ public class scoreCalculate {
         
         
     /// calculating new score and updating to lane
-     public void markScore(Lane lane,int ball,int score){
+     
+        public int getHighestScore(int[] curScore)
+        {
+        	int j=0; 
+        	int high=-1;
+        	for(int i=0;i<23;)
+        	{
+        		int c = curScore[i]+curScore[i+1];
+        		i=i+2;
+        		if(c>high)
+        		{
+        			j = i;
+        		}
+        	}
+        	
+        	return j;
+        }
+        
+     public void markScore(Lane lane,int ball,int score,boolean f){
         int[] curScore;
         int[] userScore;
+        foul = f;
         int index =  ( lane.frameNumber * 2 + ball);
         curScore = (int[]) scores.get(lane.currentThrower);
-        curScore[ index] = score;
+        curScore[index] = score;
+        if(lane.currentThrower.zeros==2)
+        {
+        	int i = getHighestScore(curScore);
+        	curScore[i] = curScore[i]/2;
+        	curScore[i+1] = curScore[i+1]/2;
+        	lane.currentThrower.zeros=0;
+        }
+        	
         userScore = (int[]) scores.get(lane.currentThrower);
         userScore[index] = curScore[ index];
         scores.put(lane.currentThrower, curScore);
@@ -160,7 +187,7 @@ public class scoreCalculate {
         curScore = (int[]) scores.get(Cur);
         int current = 2*frame + ball - 1;
         int user = current*5+18+curScore[0]; 
-        for (int i = 0; i != 10; i++) {
+        for (int i = 0; i != 13; i++) {
             user++;
             cumulScores[bowlIndex][i] = inti;
         }
@@ -202,6 +229,98 @@ public class scoreCalculate {
             }
         }
     }
+    
+    
+    public Bowler getSecHighestPlayer(Party p)
+    {
+    	Bowler highest = null;
+    	Bowler second = null;
+    	int high = -1;
+    	int sec = -1;
+    	for (Object o : party.getMembers()) {
+    		Bowler l = (Bowler)(o);
+            int[] score;
+            int total=0;
+            score = (int[])scores.get(o);
+            
+            for (int i = 0; i != 30; i++) {
+            	total = total+score[i];
+            }
+            
+            if(high==-1)
+            {
+            	high = total;
+            	highest = l;
+            }
+            else
+            {
+            	if(high<total)
+            	{
+            		sec = high;
+            		second = highest;
+            		high = total;
+            		highest = l;
+            	}
+            	else if(total>sec)
+            	{
+            		sec = total;
+            		second = l;
+            	}
+            	
+            }
+            
+            System.out.println(total);
+            
+           
+        }
+    	
+    	return second;
+    	
+    }
+    
+    public Bowler getHighestPlayer(Party p)
+    {
+    	Bowler highest = null;
+    	
+    	int high = -1;
+    	
+    	for (Object o : party.getMembers()) {
+    		Bowler l = (Bowler)(o);
+            int[] score;
+            int total=0;
+            score = (int[])scores.get(o);
+            
+            for (int i = 0; i != 30; i++) {
+            	total = total+score[i];
+            }
+            
+            if(high==-1)
+            {
+            	high = total;
+            	highest = l;
+            }
+            else
+            {
+            	if(high<total)
+            	{
+        
+            		high = total;
+            		highest = l;
+            	}
+            	
+            	
+            }
+            
+            System.out.println(total);
+            
+           
+        }
+    	
+    	return highest;
+    	
+    }
+    
+    
     
     public void functionNormalThrow(int i,int bowlIndex,int[] curScore){
         boolean spac = false;

@@ -156,7 +156,14 @@ public class LaneStatusView implements LaneObserver, PinsetterObserver {
 	}
 
 	public void receivePinsetterEvent(PinsetterEvent pe) {
-		pinsDown.setText( ( new Integer(pe.totalPinsDown()) ).toString());		
+		if(pe.isFoulCommited())
+		{
+			pinsDown.setText("Foul");
+			System.out.println("Here");
+		}
+			
+		else
+			pinsDown.setText( ( new Integer(pe.totalPinsDown()) ).toString());		
 	}
 
 }

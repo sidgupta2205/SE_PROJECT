@@ -28,11 +28,14 @@ public class Bowler {
     private String fullName;
     private String nickName;
     private String email;
-
+    public boolean block;
+    public int zeros; 
     public Bowler( String nick, String full, String mail ) {
 	nickName = nick;
 	fullName = full;
   	email = mail;
+  	block = false;
+  	zeros = 0;
     }
 
 	public String getFullName ( ) {

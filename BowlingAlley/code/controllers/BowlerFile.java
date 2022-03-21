@@ -29,7 +29,7 @@ import java.io.*;
 public class BowlerFile {
 
 	/** The location of the bowelr database */
-	private static String BOWLER_DAT = "/home/hussain/Desktop/Sem2/SE/SE_PROJECT-master/BowlingAlley/code/BOWLERS.DAT";
+	private static String BOWLER_DAT = "D:\\iiith\\git_repo\\SE_Project\\BowlingAlley\\code\\BOWLERS.DAT";
 
     /**
      * Retrieves bowler information from the database and returns a Bowler objects with populated fields.

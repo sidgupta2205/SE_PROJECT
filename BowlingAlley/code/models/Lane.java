@@ -208,13 +208,19 @@ public class Lane extends Thread implements PinsetterObserver {
 
 				if (bowlerIterator.hasNext()) {
 					currentThrower = (Bowler)bowlerIterator.next();
-
+					if(currentThrower.block)
+					{
+						System.out.println("block");
+						continue;
+					}
+						
 					canThrowAgain = true;
 					tenthFrameStrike = false;
 					ball = 0;
 					while (canThrowAgain) {
 						int count = smt.ballThrown();
-						setter.sendEvent(smt.pins,count, smt.foul);
+						System.out.println("Lane foul is "+smt.isFoul());
+						setter.sendEvent(smt.pins,count, smt.isFoul());
 						smt.resetPins();
 						
 						// simulate the thrower's ball hiting
@@ -235,10 +241,43 @@ public class Lane extends Thread implements PinsetterObserver {
 					bowlIndex++;
 					
 				} else {
+					
+					System.out.println("executing frame "+frameNumber);
 					frameNumber++;
 					resetBowlerIterator();
 					bowlIndex = 0;
-					if (frameNumber > 9) {
+					
+					if (frameNumber==9)
+					{
+						
+							for (Object o : party.getMembers()) {
+					    		Bowler l = (Bowler)(o);
+					    		l.block = true;
+					    		
+							}
+							
+							Bowler k = ScCalculate.getSecHighestPlayer(party);
+							System.out.println(k.getFullName());
+							k.block = false;
+						
+						
+					}
+					
+					if (frameNumber==10)
+					{
+						
+							
+							
+							Bowler k = ScCalculate.getHighestPlayer(party);
+							System.out.println(k.getFullName());
+							k.block = false;
+						
+						
+					}
+					
+					
+					
+					if (frameNumber > 13) {
 						gameFinished = true;
 						gameNumber++;
 					}
@@ -306,12 +345,32 @@ public class Lane extends Thread implements PinsetterObserver {
 			
 			
 			int score = pe.pinsDownOnThisThrow();
-			if (pe.pinsDownOnThisThrow() >=  0) {			// this is a real throw
-				ScCalculate.markScore(this, ball, score);
+			System.out.println(score);
+			if (pe.pinsDownOnThisThrow() >=  0) {	
+				// this is a real throw
+				
+				if(pe.pinsDownOnThisThrow() ==  0)
+				{
+					currentThrower.zeros++; 
+				}
+					
+				
+				ScCalculate.markScore(this, ball, score,pe.isFoulCommited());
 	
 				// next logic handles the ?: what conditions dont allow them another throw?
 				// handle the case of 10th frame first
+				
+			
+				
+				
 				if (frameNumber == 9) {
+					
+					System.out.println("frame 9 is executed");
+					
+					
+					
+					System.out.println("Here");
+					
 					if (pe.totalPinsDown() == 10) {
 						setter.resetPins();
 						if(pe.getThrowNumber() == 1) {
@@ -321,11 +380,19 @@ public class Lane extends Thread implements PinsetterObserver {
 				
 					if ((pe.totalPinsDown() != 10) && (pe.getThrowNumber() == 2 && tenthFrameStrike == false)) {
 						canThrowAgain = false;
+						
+						// add frames for next throw
 						//publish( lanePublish() );
+						
+						
+						
+						
+						
 					}
 				
 					if (pe.getThrowNumber() == 3) {
 						canThrowAgain = false;
+						
 						//publish( lanePublish() );
 					}
 				} else { // its not the 10th frame
@@ -365,8 +432,8 @@ public class Lane extends Thread implements PinsetterObserver {
 		Iterator bowlIt = (party.getMembers()).iterator();
 
 		while ( bowlIt.hasNext() ) {
-			int[] toPut = new int[25];
-			for ( int i = 0; i != 25; i++){
+			int[] toPut = new int[30];
+			for ( int i = 0; i != 30; i++){
 				toPut[i] = -1;
 			}
 			scores.put( bowlIt.next(), toPut );
@@ -395,7 +462,7 @@ public class Lane extends Thread implements PinsetterObserver {
 		ScCalculate.partyAssigned = true;
 		ScCalculate.party = theParty;
 		ScCalculate.resetScores(theParty);
-		ScCalculate.cumulScores = new int[party.getMembers().size()][10];
+		ScCalculate.cumulScores = new int[party.getMembers().size()][20];
 	}
 
 	/** markScore()

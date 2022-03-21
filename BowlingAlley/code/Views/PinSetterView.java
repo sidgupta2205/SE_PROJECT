@@ -199,6 +199,16 @@ public class PinSetterView implements PinsetterObserver {
 				}
 	    	}
     	}
+	else
+	{
+		for ( int c = 0; c < 10; c++ ) {
+			JLabel tempPin = new JLabel ( );
+			tempPin = (JLabel)pinVect.get ( c );
+	    	tempPin.setForeground ( Color.lightGray );
+			
+    	}
+		
+	}
 		if ( pe.getThrowNumber() == 1 ) {
 	   		 secondRoll.setBackground ( Color.yellow );
 		}
