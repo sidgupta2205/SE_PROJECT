@@ -10,4 +10,9 @@ public final class config {
     // controllers package (bowlerfile.java and scorehistoryfile.java)
     public static final String c_BOWLER_DAT = "D:\\iiith\\git_repo\\SE_Project\\BowlingAlley\\code\\BOWLERS.DAT";
     public static final String c_SCOREHISTORY_DAT = "SCOREHISTORY.DAT";
+    
+    
+    // new constants
+    public static final int c_ballgrids = 13;
+    public static final int c_ballschance = 29;
 }
